@@ -2,7 +2,7 @@
 <b>Installation</b>
 ```
 git clone https://github.com/xexpanderx/Conky-themes
-cd Conky-Weather
+cd Conky-themes/Conky-Weather/
 sh install.sh
 sudo pip install pyowm
 ```
