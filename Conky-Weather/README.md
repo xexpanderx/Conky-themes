@@ -4,6 +4,7 @@
 git clone https://github.com/xexpanderx/Conky-themes
 cd Conky-Weather
 sh install.sh
+sudo pip install pyowm
 ```
 
 <b>Configuration</b>
