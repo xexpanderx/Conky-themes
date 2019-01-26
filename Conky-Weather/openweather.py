@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import pyowm
 import argparse
 import subprocess
@@ -10,11 +10,11 @@ def process (args):
     weather_values = weather_details.get_weather()
 
     if args.get_temp_c:
-        print weather_values.get_temperature(unit='celsius')['temp']
+        print(weather_values.get_temperature(unit='celsius')['temp'])
     if args.get_temp_f:
-        print weather_values.get_temperature(unit='fahrenheit')['temp']
+        print(weather_values.get_temperature(unit='fahrenheit')['temp'])
     if args.get_weather_icon:
-        print 'PNG/'+weather_values.get_weather_icon_name()+'.png'
+        print('PNG/'+weather_values.get_weather_icon_name()+'.png')
 
 
 parser = argparse.ArgumentParser(description='Openweather script.')
