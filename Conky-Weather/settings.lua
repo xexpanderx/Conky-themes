@@ -1,8 +1,8 @@
 
 -- ###Openweather settings###
-api_key = "YOUR API KEY HERE"
-city = "YOUR CITY HERE"
-country_code = "YOUR COUNTRY CODE HERE"
+api_key = "YOUR-API-KEY"
+city = "YOUR-CITY-NAME"
+country_code = "YOUR-COUNTRY-CODE"
 -- ###Colors###
 HTML_circle = "#232323"
 HTML_border = "#000000"
@@ -11,6 +11,10 @@ transparency = 1.0
 transparency_border = 0.2
 transparency_text = 0.5
 transparency_weather_icon = 1.0
+-- ###Font sizes###
+City_font = 9
+Temperature_font = 24
+Day_font = 12
 -- ###Dont change code below###
 require 'cairo'
 
@@ -83,22 +87,22 @@ function draw_function(cr)
   draw_border(cr, pos_x, pos_y, radius+1, r_border, g_border, b_border, transparency_border)
 
   --Draw weathor icon
-	image_path = conky_parse("${exec ./openweather.py --get_weather_icon --api_key " .. api_key .. " --city " .. city .. " --ccode " .. country_code .. "}")
+	image_path = conky_parse("${exec ./openweather.py --get_weather_icon --api_key " .. api_key .. " --city " .. "\"" .. city .. "\"" .. " --ccode " .. country_code .. "}")
 	draw_weather_icon(cr, pos_x-60, pos_y, image_path, transparency_weather_icon)
 
 	--Draw text
 	---Temperature
 	cairo_select_font_face (cr, "Dejavu Sans Book", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD)
-	temperature = conky_parse("${exec ./openweather.py --get_temp_c --api_key " .. api_key .. " --city " .. city .. " --ccode " .. country_code .. "}")
+	temperature = conky_parse("${exec ./openweather.py --get_temp_c --api_key " .. api_key .. " --city " .. "\"" .. city .. "\"" .. " --ccode " .. country_code .. "}")
 	temperature = tostring(tonumber(string.format("%.0f", temperature)))
-  draw_text(cr, pos_x, pos_y, r_text, g_text, b_text, transparency_text, temperature .. "˚C", 24, 19.25, 0)
+  draw_text(cr, pos_x, pos_y, r_text, g_text, b_text, transparency_text, temperature .. "˚C", Temperature_font, 19.25, 0)
   ----City
 	cairo_select_font_face (cr, "Dejavu Sans Book", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL)
-  draw_text(cr, pos_x, pos_y, r_text, g_text, b_text, transparency_text, city, 12, 0, -35)
+  draw_text(cr, pos_x, pos_y, r_text, g_text, b_text, transparency_text, city, City_font, 0, -35)
   ----Day
   day = conky_parse('${exec date +%A}')
 	cairo_select_font_face (cr, "Dejavu Sans Book", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL)
-  draw_text(cr, pos_x, pos_y, r_text, g_text, b_text, transparency_text, day, 12, 0, 35)
+  draw_text(cr, pos_x, pos_y, r_text, g_text, b_text, transparency_text, day, Day_font, 0, 35)
 
 end
 
