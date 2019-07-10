@@ -17,6 +17,7 @@ Temperature_font = 24
 Day_font = 12
 -- ###Dont change code below###
 require 'cairo'
+assert(os.setlocale("en_US.utf8", "numeric"))
 
 function hex2rgb(hex)
 	hex = hex:gsub("#","")
@@ -94,7 +95,7 @@ function draw_function(cr)
 	---Temperature
 	cairo_select_font_face (cr, "Dejavu Sans Book", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD)
 	temperature = conky_parse("${exec ./openweather.py --get_temp_c --api_key " .. api_key .. " --city " .. "\"" .. city .. "\"" .. " --ccode " .. country_code .. "}")
-	temperature = string.format("%.0f", string.gsub(temperature, ",", "."))
+	temperature = string.format("%.0f", temperature)
   draw_text(cr, pos_x, pos_y, r_text, g_text, b_text, transparency_text, temperature .. "˚C", Temperature_font, 19.25, 0)
   ----City
 	cairo_select_font_face (cr, "Dejavu Sans Book", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL)
