@@ -94,7 +94,7 @@ function draw_function(cr)
 	---Temperature
 	cairo_select_font_face (cr, "Dejavu Sans Book", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD)
 	temperature = conky_parse("${exec ./openweather.py --get_temp_c --api_key " .. api_key .. " --city " .. "\"" .. city .. "\"" .. " --ccode " .. country_code .. "}")
-	temperature = tostring(tonumber(string.format("%.0f", temperature)))
+	temperature = string.format("%.0f", string.gsub(temperature, ",", "."))
   draw_text(cr, pos_x, pos_y, r_text, g_text, b_text, transparency_text, temperature .. "˚C", Temperature_font, 19.25, 0)
   ----City
 	cairo_select_font_face (cr, "Dejavu Sans Book", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL)
