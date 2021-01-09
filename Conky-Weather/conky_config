@@ -1,6 +1,6 @@
 conky.config = {
 	background = false,
-	update_interval = 1,
+	update_interval = 15,
 
 	override_utf8_locale = true,
 
@@ -37,7 +37,7 @@ conky.config = {
 
 	uppercase = false,
 
-	lua_load = 'settings.lua',
+	lua_load = '~/.conky/Conky-Weather/settings.lua',
 	lua_draw_hook_pre = 'start_widgets',
 };
 

@@ -1,8 +1,8 @@
 
 -- ###Openweather settings###
-api_key = "YOUR-API-KEY"
-city = "YOUR-CITY-NAME"
-country_code = "YOUR-COUNTRY-CODE"
+api_key = "YOUR_API_KEY"
+city = "YOUR_CITY"
+country_code = "YOUR_COUNTRY_CODE"
 -- ###Colors###
 HTML_circle = "#232323"
 HTML_border = "#000000"
@@ -46,7 +46,7 @@ function draw_circle(cr, pos_x, pos_y, radius, r_border, g_border, b_border, tra
 end
 
 function draw_border(cr, pos_x, pos_y, radius, r_border, g_border, b_border, trans)
-	cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE)
+	--cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE)
 	cairo_set_source_rgba(cr, r_border,g_border,b_border,trans)
 	cairo_set_line_width(cr, 2)
 	cairo_arc(cr,pos_x,pos_y,radius,0*math.pi/180,360*math.pi/180)
@@ -54,10 +54,14 @@ function draw_border(cr, pos_x, pos_y, radius, r_border, g_border, b_border, tra
 end
 
 function draw_weather_icon(cr, pos_x, pos_y, image_path, trans)
-	cairo_set_operator(cr, CAIRO_OPERATOR_OVER)
-	local image = cairo_image_surface_create_from_png (image_path)
-	local w_img = cairo_image_surface_get_width (image)
-	local h_img = cairo_image_surface_get_height (image)
+	--cairo_set_operator(cr, CAIRO_OPERATOR_OVER)
+	local home = assert(io.popen("echo $HOME"))
+	local home = assert(home:read('*a'))
+	local home = home:gsub("[\n\r]", "") 
+	local image_path = home .. "/.conky/Conky-Weather/PNG/" .. image_path .. ".png"
+	local image = cairo_image_surface_create_from_png(image_path)
+	local w_img = cairo_image_surface_get_width(image)
+	local h_img = cairo_image_surface_get_height(image)
 
 	cairo_save(cr)
 	cairo_set_source_surface (cr, image, pos_x-w_img/2, pos_y-h_img/2)
@@ -67,7 +71,7 @@ function draw_weather_icon(cr, pos_x, pos_y, image_path, trans)
 end
 
 function draw_text(cr, pos_x, pos_y, r_text, g_text, b_text, trans, text, font_size, shift_x, shift_y)
-	cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE)
+	--cairo_set_operator(cr, CAIRO_OPERATOR_OVER)
 	cairo_set_source_rgba(cr, r_text, g_text, b_text, trans)
 	ct = cairo_text_extents_t:create()
 	cairo_set_font_size(cr, font_size)
@@ -84,26 +88,25 @@ function draw_function(cr)
 	local radius = 60
 	local pos_x = w-70
 	local pos_y = 70
+
  	draw_circle(cr, pos_x, pos_y, radius, r_circle, g_circle, b_circle, transparency)
-  draw_border(cr, pos_x, pos_y, radius+1, r_border, g_border, b_border, transparency_border)
+    draw_border(cr, pos_x, pos_y, radius+1, r_border, g_border, b_border, transparency_border)
 
-  --Draw weathor icon
-	image_path = conky_parse("${exec ./openweather.py --get_weather_icon --api_key " .. api_key .. " --city " .. "\"" .. city .. "\"" .. " --ccode " .. country_code .. "}")
-	draw_weather_icon(cr, pos_x-60, pos_y, image_path, transparency_weather_icon)
-
-	--Draw text
-	---Temperature
-	cairo_select_font_face (cr, "Dejavu Sans Book", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD)
-	temperature = conky_parse("${exec ./openweather.py --get_temp_c --api_key " .. api_key .. " --city " .. "\"" .. city .. "\"" .. " --ccode " .. country_code .. "}")
-	temperature = string.format("%.0f", temperature)
-  draw_text(cr, pos_x, pos_y, r_text, g_text, b_text, transparency_text, temperature .. "˚C", Temperature_font, 19.25, 0)
+  --Draw text
   ----City
 	cairo_select_font_face (cr, "Dejavu Sans Book", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL)
-  draw_text(cr, pos_x, pos_y, r_text, g_text, b_text, transparency_text, city, City_font, 0, -35)
+  	draw_text(cr, pos_x, pos_y, r_text, g_text, b_text, transparency_text, city, City_font, 0, -35)
   ----Day
-  day = conky_parse('${exec date +%A}')
+  	day = conky_parse('${exec date +%A}')
 	cairo_select_font_face (cr, "Dejavu Sans Book", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL)
-  draw_text(cr, pos_x, pos_y, r_text, g_text, b_text, transparency_text, day, Day_font, 0, 35)
+	draw_text(cr, pos_x, pos_y, r_text, g_text, b_text, transparency_text, day, Day_font, 0, 35)
+  ----Temperature
+	cairo_select_font_face (cr, "Dejavu Sans Book", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD)
+	temperature = conky_parse("${exec ~/.conky/Conky-Weather/openweather.py --get_temp_c --api_key " .. api_key .. " --city " .. "\"" .. city .. "\"" .. " --ccode " .. country_code .. "}")
+	draw_text(cr, pos_x, pos_y, r_text, g_text, b_text, transparency_text, temperature .. "˚C", Temperature_font, 19.25, 0)
+  ----Draw weathor icon
+  	image_path = conky_parse("${exec ~/.conky/Conky-Weather/openweather.py --get_weather_icon --api_key " .. api_key .. " --city " .. "\"" .. city .. "\"" .. " --ccode " .. country_code .. "}")
+  	draw_weather_icon(cr, pos_x-60, pos_y, image_path, transparency_weather_icon)
 
 end
 
@@ -118,14 +121,7 @@ function conky_start_widgets()
 
 	local cr=cairo_create(cs)
 
-	local updates=conky_parse('${updates}')
-	update_num=tonumber(updates)
-
-	-- Check that Conky has been running for at least 5s
-
-	if update_num>5 then
-		draw_conky_function(cr)
-	end
+	draw_conky_function(cr)
 	cairo_surface_destroy(cs)
 	cairo_destroy(cr)
 end
