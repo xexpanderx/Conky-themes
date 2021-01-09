@@ -39,6 +39,7 @@ function fix_text(text)
 end
 
 function draw_circle(cr, pos_x, pos_y, radius, r_border, g_border, b_border, trans)
+	cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE)
 	cairo_set_source_rgba(cr, r_border,g_border,b_border,trans)
 	cairo_set_line_width(cr, 1)
 	cairo_arc(cr,pos_x,pos_y,radius,0*math.pi/180,360*math.pi/180)
@@ -46,7 +47,7 @@ function draw_circle(cr, pos_x, pos_y, radius, r_border, g_border, b_border, tra
 end
 
 function draw_border(cr, pos_x, pos_y, radius, r_border, g_border, b_border, trans)
-	--cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE)
+	cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE)
 	cairo_set_source_rgba(cr, r_border,g_border,b_border,trans)
 	cairo_set_line_width(cr, 2)
 	cairo_arc(cr,pos_x,pos_y,radius,0*math.pi/180,360*math.pi/180)
