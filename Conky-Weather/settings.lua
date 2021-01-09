@@ -72,7 +72,7 @@ function draw_weather_icon(cr, pos_x, pos_y, image_path, trans)
 end
 
 function draw_text(cr, pos_x, pos_y, r_text, g_text, b_text, trans, text, font_size, shift_x, shift_y)
-	cairo_set_operator(cr, CAIRO_OPERATOR_OVER)
+	cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE)
 	cairo_set_source_rgba(cr, r_text, g_text, b_text, trans)
 	ct = cairo_text_extents_t:create()
 	cairo_set_font_size(cr, font_size)
